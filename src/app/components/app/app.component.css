@@ -1,0 +1,19 @@
+#mainContent{
+    width: 80%;
+    height: 100%;
+    margin: auto;
+    padding: 0;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: #fafafa;
+    background-color: #eaeaea;
+}
+
+h1{
+    font-size: 3rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}

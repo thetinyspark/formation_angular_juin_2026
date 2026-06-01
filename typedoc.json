@@ -1,0 +1,6 @@
+{
+    "entryPoints": ["./src/app/services/app.service.ts"],
+    "out": "docs/", 
+    "githubPages": false, 
+    "cleanOutputDir": false
+  }
