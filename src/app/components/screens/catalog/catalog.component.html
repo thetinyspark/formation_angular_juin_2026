@@ -24,5 +24,7 @@
     <app-product [product]="currentProduct" 
                 (onAddToCart)="onAddToCart($event)" 
                 class="col-4 psmall"
+                [buyable]="true" 
+                [detailed]="false" 
                 *ngFor="let currentProduct of products | catalogFilter: getCatalogFilter()"  />
 </div>

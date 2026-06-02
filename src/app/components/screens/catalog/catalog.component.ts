@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CatalogFilter } from '../../../model/types/CatalogFilter.type';
 import { CatalogFilterPipe } from '../../../pipes/catalog-filter.pipe';
 import { ProductComponent } from '../../products/product/product.component';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-catalog',
@@ -22,6 +23,7 @@ export class CatalogComponent {
   public filterPriceMin:number = 0;
   public filterPriceMax:number = 100;  
   private _catalogService: CatalogService = inject(CatalogService);
+  private _cartService: CartService = inject(CartService);
 
   public ngOnInit(): void {
     this._catalogService.getProductsFromAPI().subscribe( 
@@ -34,7 +36,7 @@ export class CatalogComponent {
 
         this.platforms.unshift("All");
       }
-    )
+    );
   }
 
   public getCatalogFilter(): CatalogFilter {
@@ -47,7 +49,7 @@ export class CatalogComponent {
   }
 
   public onAddToCart(product: Product): void {
-    console.log("Product added to cart : ", product);
+    this._cartService.addToCart(product);
   }
 
 }

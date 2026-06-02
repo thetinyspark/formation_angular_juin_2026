@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { CartService } from '../../../services/cart.service';
 import { Product } from '../../../model/product';
 import { NgFor } from '@angular/common';
+import { ProductComponent } from '../../products/product/product.component';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, ProductComponent],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })

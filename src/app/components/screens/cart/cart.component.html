@@ -4,9 +4,11 @@
         <th>Price</th>
         <th>Image</th>
     </tr>
-    <tr *ngFor="let product of products">
-        <td class="col-3 psmall">{{ product.name }}</td>
-        <td class="col-3 psmall">{{ product.price.toFixed(2) }}€</td>
-        <td class="col-3 psmall"><img [src]="product.img" [alt]="product.name"></td>
-    </tr>
+    @for(product of products; track product.id){
+        <tr>
+            <td class="col-3 psmall">{{ product.name }}</td>
+            <td class="col-3 psmall">{{ product.price.toFixed(2) }}€</td>
+            <td class="col-3 psmall"><img [src]="product.img" [alt]="product.name"></td>
+        </tr>
+    }
 </table>

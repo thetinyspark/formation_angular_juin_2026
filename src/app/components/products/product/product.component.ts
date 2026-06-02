@@ -13,6 +13,12 @@ export class ProductComponent {
   @Input()
   public product :Product|null = null;
 
+  @Input()
+  public detailed :boolean = false;
+
+  @Input()
+  public buyable :boolean = false;
+
   @Output()
   public onAddToCart = new EventEmitter<Product>();
 

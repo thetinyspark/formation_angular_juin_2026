@@ -1,9 +1,18 @@
 <div *ngIf="product != null">
     <h3>{{ product.name }}</h3>
-    <p>{{ product.description }}</p>
-    <p>Price: {{ product.price.toFixed(2) }}€</p>
-    <p>Platform: {{ product.platform }}</p>
-    <p><button (click)="addToCart()">Add to Cart</button></p>
-    <img [src]="product.img" [alt]="product.name">
     
+    @if( detailed == true){
+        <p>{{ product.description }}</p>
+    }
+    
+    <p>Price: {{ product.price.toFixed(2) }}€</p>
+    
+    @if( detailed == true){
+        <p>Platform: {{ product.platform }}</p>
+    }
+    
+    <img [src]="product.img" [alt]="product.name">
+    @if( buyable == true ){
+        <p><button (click)="addToCart()">Add to Cart</button></p>
+    }
 </div>
