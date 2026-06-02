@@ -2,7 +2,7 @@
     <div *ngFor="let product of products" class="col-4 psmall">
         <h3>{{ product.name }}</h3>
         <p>{{ product.description }}</p>
-        <p>Price: ${{ product.price.toFixed(2) }}</p>
+        <p>Price: {{ product.price.toFixed(2) }}€</p>
         <p>Platform: {{ product.platform }}</p>
         <img [src]="product.img" [alt]="product.name">
     </div>

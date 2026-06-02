@@ -1,0 +1,10 @@
+#catalog img{
+    height: 100px;
+    width: 100px;
+}
+
+
+
+#catalog th, #catalog td {
+    border: 1px solid black;
+}
