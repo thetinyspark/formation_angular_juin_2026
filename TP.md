@@ -1,11 +1,6 @@
-TP n°1 
+TP n°2 
 
-Remplir le composant IdCardComponent avec les informations 
-suivantes: 
-
-
-- Nom
-- Prenom
-- Age 
-- Sexe
-- Profession
+- Créer les routes pour les composants login, cart et catalog
+- Ajouter les liens pour rediriger vers ces routes
+- Ces liens de navigation, regroupez-les dans un composant NavBarComponent
+que vous ajouterez à AppComponent
