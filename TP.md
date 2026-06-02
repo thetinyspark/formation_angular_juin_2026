@@ -1,6 +1,8 @@
-TP n°2 
+TP n°3 
 
-- Créer les routes pour les composants login, cart et catalog
-- Ajouter les liens pour rediriger vers ces routes
-- Ces liens de navigation, regroupez-les dans un composant NavBarComponent
-que vous ajouterez à AppComponent
+- De la même façon que l'on a affiché des données provenant d'un service CatalogService au sein du composant CatalogComponent, faites-en sorte:  
+
+
+- De créer un CartService nous permettant d'obtenir le contenu du panier ( pour cela vous pouvez créer un fichier en dur dans assets, nommé cart.json )
+
+- D'afficher le contenu du panier au sein du composant CartComponent

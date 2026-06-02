@@ -1,8 +1,8 @@
-[
+export const PRODUCTS = [
   {
     "id": 1,
     "name": "Call Of Duty Deluxe of doom",
-    "price": 1079.99,
+    "price": 79.99,
     "description": "A FPS game.",
     "img": "./assets/img/cod.jpg",
     "platform": "PC"
@@ -39,4 +39,4 @@
     "img": "./assets/img/kart.png",
     "platform": "N64"
   }
-]
+];
