@@ -1,17 +1,8 @@
-TP n°5 
+TP n°6 
 
-Ajoutez les fonctionnalités suivantes au ProductComponent.ts
+Ajoutez les fonctionnalités suivantes au CartService ainsi qu'au CartComponent. 
 
-
-- Faire en sorte qu'il y ait deux modes d'affichage, l'un concis, l'autre détaillé. 
-- Dans le mode concis, on ne voit que l'image, le nom, le prix du produit, ainsi que le bouton "Add to cart"
-- Dans le mode détaillé, on ajoute la description du produit, ainsi que sa plateforme
-
-Ces deux modes, doivent pouvoir être activé via des booleans publics en @Input posés 
-sur le ProductComponent 
-
-
-- Dans le CartService, ajoutez une fonctionnalité nommée "addToCart" qui fait en sorte 
-de stocker le produit nouvellement acheté au sein d'un tableau. 
-
-- Concernant la fonctionnalité getCartFromAPI, laissez là intouchée pour l'instant, nous la modifierons après. 
+- Si le panier est vide, affichez un message à la place du tableau vide (sinon c'est moche).
+- Ajoutez un bouton permettant de retirer un élément du panier. 
+- Ajoutez une méthode sur le CartService capable de retirer un produit du panier. 
+- Faire en sorte de calculer la total HT ainsi que le total TTC (TVA 20%) et l'afficher dans le composant
