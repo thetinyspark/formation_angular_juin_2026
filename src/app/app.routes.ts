@@ -3,6 +3,7 @@ import { HomeComponent } from './components/screens/home/home.component';
 import { CatalogComponent } from './components/screens/catalog/catalog.component';
 import { CartComponent } from './components/screens/cart/cart.component';
 import { LoginComponent } from './components/screens/login/login.component';
+import { cartNotEmptyGuard } from './guards/cart-not-empty.guard';
 
 // Configuration of the routes of the application
 const routeConfig: Routes = [
@@ -24,6 +25,7 @@ const routeConfig: Routes = [
   {
     path: 'cart',
     component: CartComponent,
+    canActivate: [cartNotEmptyGuard],
     title: 'Cart page'
   },
   {
