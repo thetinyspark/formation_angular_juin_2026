@@ -8,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './id-card.component.css'
 })
 export class IdCardComponent {
-  public name: string = 'Mélanie Colombier';
+  public name: string = 'Legrand';
+  public firstName: string = 'Nicolas';
+  public age: number = 40;
+  public sex: string = 'Masculin';
+  public profession: string = 'Développeur';
 }
