@@ -1,14 +1,32 @@
+@if( products.length === 0){
+    <p class="psmall">Votre panier est vide</p>
+} 
+@else {
 <table id="catalog" class="col-12">
     <tr>
-        <th>Name</th>
-        <th>Price</th>
+        <th></th>
+        <th>Nom</th>
+        <th>Prix</th>
         <th>Image</th>
     </tr>
     @for(product of products; track product.id){
         <tr>
+            <td><button (click)="removeFromCart(product)">X</button></td>
             <td class="col-3 psmall">{{ product.name }}</td>
             <td class="col-3 psmall">{{ product.price.toFixed(2) }}€</td>
             <td class="col-3 psmall"><img [src]="product.img" [alt]="product.name"></td>
         </tr>
     }
+
+    <tr>
+        <td colspan="2"></td>
+        <td>Total HT: </td>
+        <td>{{ getTotalPrice().toFixed(2) }}€</td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+        <td>Total TTC: </td>
+        <td>{{ getTotalPriceTTC().toFixed(2) }}€</td>
+    </tr>
 </table>
+}

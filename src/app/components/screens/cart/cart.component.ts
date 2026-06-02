@@ -30,4 +30,16 @@ export class CartComponent {
         }
     );
   }
+
+  public getTotalPrice(): number {
+    return this._cartService.getTotalPrice();
+  }
+
+  public getTotalPriceTTC(): number {
+    return this._cartService.getTotalPriceTTC();
+  }
+
+  public removeFromCart(product: Product): void {
+    this._cartService.removeFromCart(product);
+  }
 }
