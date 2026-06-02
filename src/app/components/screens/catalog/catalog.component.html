@@ -21,11 +21,8 @@
 
 </div>
 <div id="catalog" class="row">
-    <div *ngFor="let product of products | catalogFilter: getCatalogFilter()" class="col-4 psmall">
-        <h3>{{ product.name }}</h3>
-        <p>{{ product.description }}</p>
-        <p>Price: {{ product.price.toFixed(2) }}€</p>
-        <p>Platform: {{ product.platform }}</p>
-        <img [src]="product.img" [alt]="product.name">
-    </div>
+    <app-product [product]="currentProduct" 
+                (onAddToCart)="onAddToCart($event)" 
+                class="col-4 psmall"
+                *ngFor="let currentProduct of products | catalogFilter: getCatalogFilter()"  />
 </div>

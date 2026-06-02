@@ -1,12 +1,17 @@
-TP n°4 
+TP n°5 
 
-En se basant sur le modèle du NamePipe créez : 
-
-- Un pipe PricePipe permettant de filtrer les produits compris entre un prix min et un prix max
-- Un pipe PlatformPipe permettant de filtrer les produits en fonction d'une plateforme précise
-- Créez les interfaces graphiques nécessaires pour recueillir la donnée utilisateur
-et envoyez là à vos filtres à l'aide de ngmodel. 
-- Vous pouvez chaîner plusieurs pipes à la suite. 
+Ajoutez les fonctionnalités suivantes au ProductComponent.ts
 
 
-Bonus: Créez un pipe permettant de réunir l'ensemble de tous les pipes. 
+- Faire en sorte qu'il y ait deux modes d'affichage, l'un concis, l'autre détaillé. 
+- Dans le mode concis, on ne voit que l'image, le nom, le prix du produit, ainsi que le bouton "Add to cart"
+- Dans le mode détaillé, on ajoute la description du produit, ainsi que sa plateforme
+
+Ces deux modes, doivent pouvoir être activé via des booleans publics en @Input posés 
+sur le ProductComponent 
+
+
+- Dans le CartService, ajoutez une fonctionnalité nommée "addToCart" qui fait en sorte 
+de stocker le produit nouvellement acheté au sein d'un tableau. 
+
+- Concernant la fonctionnalité getCartFromAPI, laissez là intouchée pour l'instant, nous la modifierons après. 
