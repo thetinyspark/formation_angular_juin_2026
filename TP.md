@@ -1,8 +1,12 @@
-TP n°3 
+TP n°4 
 
-- De la même façon que l'on a affiché des données provenant d'un service CatalogService au sein du composant CatalogComponent, faites-en sorte:  
+En se basant sur le modèle du NamePipe créez : 
+
+- Un pipe PricePipe permettant de filtrer les produits compris entre un prix min et un prix max
+- Un pipe PlatformPipe permettant de filtrer les produits en fonction d'une plateforme précise
+- Créez les interfaces graphiques nécessaires pour recueillir la donnée utilisateur
+et envoyez là à vos filtres à l'aide de ngmodel. 
+- Vous pouvez chaîner plusieurs pipes à la suite. 
 
 
-- De créer un CartService nous permettant d'obtenir le contenu du panier ( pour cela vous pouvez créer un fichier en dur dans assets, nommé cart.json )
-
-- D'afficher le contenu du panier au sein du composant CartComponent
+Bonus: Créez un pipe permettant de réunir l'ensemble de tous les pipes. 
