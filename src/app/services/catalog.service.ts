@@ -15,6 +15,7 @@ import { subscribe } from 'node:diagnostics_channel';
 export class CatalogService {
 
   private _httpClient: HttpClient = inject(HttpClient);
+  public intervalId:any = 0;
 
   constructor() { }
 
@@ -77,11 +78,22 @@ export class CatalogService {
     // on va partir du principe que le flux de cet observable 
     // ne sera jamais complété et qu'il va continuer de diffuser 
     // de la data en permanence, cela fait de lui un HOT observable
+    var index = 0;
     const obs1$ = new Observable<number>( 
       (sub:Subscriber<number>)=>{
-        const intervalId = setInterval( 
+
+        // en gros chaque fois qu'une fonction s'éxécute et que l'on déclare 
+        // des variables ou des constantes en son sein, que cette fonction 
+        // persiste en mémoire, alors chacune de ces variables / constantes 
+        // sont ce que l'on appelle des closures, çàd, des ersatz de propriétées privées
+        // des fonctions (comme les attributs privés d'un objet). 
+
+        // NOTA BENE: les fonctions, en Javascript, sont aussi des classes et chaque fois 
+        // qu'elles s'éxécutent, elles sont aussi des objets. 
+        const name = "sub_"+(++index);
+        this.intervalId = setInterval( 
           ()=>{
-            console.log("interval loop");
+            console.log("interval loop : "+name);
             sub.next( Math.round(Math.random()*1000));
           },
           1000
@@ -91,7 +103,7 @@ export class CatalogService {
         return ()=>{
           // cette fonction s'éxécute, lorsqu'on se désinscrit de
           // l'observable
-          clearInterval(intervalId);
+          clearInterval(this.intervalId);
         }
 
       }
@@ -100,7 +112,13 @@ export class CatalogService {
 
     const sub1 = obs1$.subscribe(
       (value:number)=>{
-        console.log(value);
+        console.log("sub1:"+value);
+      }
+    );
+
+    const sub2 = obs1$.subscribe(
+      (value:number)=>{
+        console.log("sub2:"+value);
       }
     );
 
@@ -112,8 +130,13 @@ export class CatalogService {
       ()=>{
         sub1.unsubscribe();
       }, 
-      3500
+      5000
     );
+
+    // Atention, à chaque fois que l'on éxécute subscribe, une nouvelle 
+    // "instance" de l'objet/fonction fléchée décrite dans l'observable est éxécutée
+    // les valeurs des constantes et variables déclarées au sein de cette fonction
+    // ne sont pas partagées entre chacune des "instances" de ces fonctions/objet
   }
 
 
