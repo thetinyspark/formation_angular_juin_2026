@@ -21,4 +21,39 @@ export class CatalogService {
   public getProductsFromAPI():Observable<Product[]> {
     return this._httpClient.get<Product[]>(environment.catalogURL);
   }
+
+  public async run():Promise<void>{
+    const prixTTC = new Promise<number>(
+      (resolve, reject) => {
+        resolve(120);
+        // reject("Une erreur est survenue");
+      }
+    );
+
+    let price = -1;
+    try{
+      price = await prixTTC;
+    }
+    catch(error){
+      console.error(error);
+    }
+    finally{
+      console.log(price);
+    }
+
+    // prixTTC.then(
+    //   (value:number) => {
+    //     console.log(value);
+    //   }
+    // ).catch(
+    //   (error) => {
+    //     console.error(error);
+    //   }
+    // ).finally(
+    //   () => {
+    //     console.log("Le traitement est terminé");
+    //   }
+    // );
+
+  }
 }
