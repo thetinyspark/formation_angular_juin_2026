@@ -1,12 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { Product } from '../model/product';
 import { PRODUCTS } from '../model/mocks/product.mock';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable, of, Subscriber } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { EmployeeWithSalary } from '../model/types/EmployeeWithSalary.type';
 import { Salary } from '../model/types/Salary.type';
 import { Employee } from '../model/types/Employee.type';
+import { subscribe } from 'node:diagnostics_channel';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,11 @@ export class CatalogService {
 
   public getProductsFromAPI():Observable<Product[]> {
     return this._httpClient.get<Product[]>(environment.catalogURL);
+  }
+
+  // transforme un observable en promesse
+  public getProductsFromAPIPromise():Promise<Product[]>{
+    return firstValueFrom(this.getProductsFromAPI());
   }
 
 
@@ -67,8 +73,34 @@ export class CatalogService {
   }
 
   public async run():Promise<void>{
-    const data = await this.getEmployeesWithSalaries();
-    console.log(data);
+    const obs1$ = new Observable<number>( 
+      (subscriber:Subscriber<number>)=>{
+        subscriber.next(10);
+        subscriber.next(20);
+        subscriber.next(30);
+        subscriber.next(666);
+        subscriber.complete();
+        subscriber.next(1000);
+      }
+    );
+
+    obs1$.subscribe(
+      {
+        // lorsqu'une donnée est diffusée au sein de l'observable
+        next: (value:number)=>{
+          console.log(value);
+        },
+        
+        // la deuxième fonctionn gère les erreurs 
+        error: (error)=>{
+          console.log(error);
+        }, 
+        // la troisième fonction gère la complétion/fermeture du flux
+        complete: ()=>{
+          console.log("le flux est complété/fermé");
+        }
+      }
+    );
   }
 
 
