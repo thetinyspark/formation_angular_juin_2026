@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Product } from '../model/product';
 import { PRODUCTS } from '../model/mocks/product.mock';
-import { combineLatest, firstValueFrom, interval, Observable, of, Subscriber } from 'rxjs';
+import { combineLatest, firstValueFrom, forkJoin, interval, map, Observable, of, Subscriber } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { EmployeeWithSalary } from '../model/types/EmployeeWithSalary.type';
@@ -74,77 +74,45 @@ export class CatalogService {
   }
 
   public async run():Promise<void>{
-    
-    // on va partir du principe que le flux de cet observable 
-    // ne sera jamais complété et qu'il va continuer de diffuser 
-    // de la data en permanence, cela fait de lui un HOT observable
-    var index = 0;
-    const obs1$ = new Observable<number>( 
-      (sub:Subscriber<number>)=>{
+    const prices1$ = interval(1000).pipe( map( counter => counter ));
+    const vat1$ = interval(2000).pipe(map( counter => Math.round(Math.random()*20)));
+    const vat = 20; 
 
-        // en gros chaque fois qu'une fonction s'éxécute et que l'on déclare 
-        // des variables ou des constantes en son sein, que cette fonction 
-        // persiste en mémoire, alors chacune de ces variables / constantes 
-        // sont ce que l'on appelle des closures, çàd, des ersatz de propriétées privées
-        // des fonctions (comme les attributs privés d'un objet). 
+    // const realPrices$ = prices1$.pipe( map(
+    //   (price:number)=>{
+    //     return price * (1+(vat/100));
+    //   }
+    // ));
 
-        // NOTA BENE: les fonctions, en Javascript, sont aussi des classes et chaque fois 
-        // qu'elles s'éxécutent, elles sont aussi des objets. 
-        const name = "sub_"+(++index);
-        this.intervalId = setInterval( 
-          ()=>{
-            console.log("interval loop : "+name);
-            sub.next( Math.round(Math.random()*1000));
-          },
-          1000
-        ); 
+    // realPrices$.subscribe(console.log);
+
+    // combineLatest n'attends pas que les flux soient complétés pour diffuser 
+    // les dernières données diffusées par les deux flux MAIS, il faut 
+    // que chacun des flux ait diffusé au moins UNE donnée avant que combineLatest
+    // ne diffuse quoique ce soit. 
 
 
-        return ()=>{
-          // cette fonction s'éxécute, lorsqu'on se désinscrit de
-          // l'observable
-          clearInterval(this.intervalId);
-        }
-
+    // forkJoin attend que les flux des deux observables soient complétés
+    // avant de diffuser la dernière valeur de chacun des flux
+    // forkJoin(
+    //   {
+    //     price: prices1$, 
+    //     vat: vat1$
+    //   }
+    // ).subscribe( 
+    //   (data:{price:number, vat:number})=>{
+    //     console.log(data.price, data.vat);
+    //   }
+    // );
+    combineLatest(
+      {
+        vat: vat1$,
+        price: prices1$, 
       }
-
-    ); 
-
-    const sub1 = obs1$.subscribe(
-      (value:number)=>{
-        console.log("sub1:"+value);
-      }
-    );
-
-    const sub2 = obs1$.subscribe(
-      (value:number)=>{
-        console.log("sub2:"+value);
+    ).subscribe( 
+      (data:{price:number, vat:number})=>{
+        console.log(data.price, data.vat);
       }
     );
-
-    // lorsqu'on se désinscrit la fonction customisée s'éxécute 
-    // et met fin à la boucle interne de diffusion de données 
-    // au sein de l'observable. ATTENTION ce dernier n'a pas 
-    // un flux complété et est donc encore considéré comme "hot"
-    setTimeout( 
-      ()=>{
-        sub1.unsubscribe();
-      }, 
-      5000
-    );
-
-    // Atention, à chaque fois que l'on éxécute subscribe, une nouvelle 
-    // "instance" de l'objet/fonction fléchée décrite dans l'observable est éxécutée
-    // les valeurs des constantes et variables déclarées au sein de cette fonction
-    // ne sont pas partagées entre chacune des "instances" de ces fonctions/objet
   }
-
-
-  // promise1 -> stack -> EventLoop JS 
-    // est-elle résolue ? 
-      // oui -> traitement de la data obtenue de façon synchrone et monothread
-      // non -> on passe à la prochaine promise à traiter
-
-  // promise2 -> stack -> EventLoop JS 
-  // NodeJS ou Browser accorde un petit temps d'éxécution à chaque promesse dans la EventLoop
 }

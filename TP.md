@@ -1,12 +1,7 @@
-TP n°10 
+TP n°11 
 
-Créez un observable qui diffuse un nombre aléatoire compris 
-entre 0 et 1000 toutes les 1000ms. 
+Créez 2 observables, un qui diffuse toutes les secondes un employe, l'autre qui diffuse, 
+un salaire toutes les 2 secondes. 
 
-```javascript
-// tirer un nombre au hasard entre 0 et 1000
-Math.round( Math.random() * 1000 )
-```
-
-Complétez le flux au bout de 3500ms et observez ce qui est diffusé
-ou non dans la console. 
+Avec combineLatest, mixez les deux observables, afin de produire une sortie de type 
+EmployeeWithSalary en mixant les données de vos deux premiers observables. 
