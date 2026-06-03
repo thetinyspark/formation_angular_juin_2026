@@ -1,10 +1,7 @@
-TP n°7 
+TP n°8 
 
-- Créez une guard nommée IsConnectedGuard empêchant l'accès à la page du panier 
-si l'utilisateur n'est pas connecté. 
+Au sein de la méthode run du catalog service, créez deux promesses
 
-- Créez un service LoginService avec une méthode "login" prenant en paramètre un pseudo
-et un mot de passe. Si le pseudo et le mot de passe sont égaux à "admin" et "admin", alors
-l'utilisateur est connecté. 
-
-- Créez un bouton de connexion au sein du LoginComponent (nous verrons les formulaires plus tard), cela sera suffisant. 
+- Une qui renvoie le prix HT au bout de 5 secondes ( utilisez setTimeout )
+- Une autre qui renvoie le taux de TVA au bout de 3 secondes
+- Combinez les deux pour obtenir un prix TTC
