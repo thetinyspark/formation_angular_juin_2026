@@ -1,0 +1,14 @@
+[
+    {
+        "employeeId": 1,
+        "amount": 10000
+    },
+    {
+        "employeeId": 2,
+        "amount": 20000
+    },
+    {
+        "employeeId": 3,
+        "amount": 15000
+    }
+]
