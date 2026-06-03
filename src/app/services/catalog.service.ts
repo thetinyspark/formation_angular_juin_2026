@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Product } from '../model/product';
 import { PRODUCTS } from '../model/mocks/product.mock';
-import { combineLatest, firstValueFrom, forkJoin, interval, map, Observable, of, Subscriber } from 'rxjs';
+import { combineLatest, firstValueFrom, forkJoin, interval, map, Observable, of, ReplaySubject, Subject, Subscriber } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { EmployeeWithSalary } from '../model/types/EmployeeWithSalary.type';
@@ -73,68 +73,30 @@ export class CatalogService {
   }
 
   public async run():Promise<void>{
+    const obs1$ = new ReplaySubject<number>();
+    const obs2$ = new ReplaySubject<number>();
+    const obs4$ = new ReplaySubject<number>();
+    const obs3$ = combineLatest( {price: obs1$, vat: obs2$}).pipe( map(
+      (data:{price:number, vat:number})=>{
+        const result = data.price * (1+(data.vat/100));
+        obs4$.next(result);
+        return result;
+      }
+    ));
+
+    obs3$.subscribe(()=>{});
+    obs2$.next(20);
     
-    const employees$ = new Observable<Employee>( 
-      (sub:Subscriber<Employee>)=>{
-        const exec = async ()=>{
-          const employees = await this.getEmployees();          
-          const intervalId = setInterval( 
-            ()=>{
-              if( employees.length > 0 )
-                sub.next(employees.pop());
-              else{
-                clearInterval(intervalId);
-                sub.complete();
-              }
-            }, 
-            1000
-          )
-        };
+  
+    obs1$.next(10);
+    obs1$.next(11);
+    obs1$.next(1000);
+    obs1$.next(1011);
+    
+    // obs1$.complete();
+    // obs2$.complete();
+    
+    obs4$.subscribe(console.log);
 
-        exec();
-      }
-    );
-
-    const salaries$ = new Observable<Salary>( 
-      (sub:Subscriber<Salary>)=>{
-        const exec = async ()=>{
-          const salaries = await this.getSalaries();          
-          const intervalId = setInterval( 
-            ()=>{
-              if( salaries.length > 0 )
-                sub.next(salaries.pop());
-              else{
-                clearInterval(intervalId);
-                sub.complete();
-              }
-            }, 
-            1000
-          )
-        };
-
-        exec();
-      }
-    );
-
-    const result = combineLatest(
-      {
-        salary: salaries$, 
-        employee: employees$,
-      }
-    ).pipe( 
-
-      map(
-        (data:{employee:Employee, salary:Salary})=>{
-          return {
-            id: data.employee.id, 
-            name: data.employee.name, 
-            salary: data.salary.employeeId == data.employee.id ? data.salary.amount : -1
-          }
-        }
-      )
-    );
-
-
-    result.subscribe(console.log);
   }
 }
