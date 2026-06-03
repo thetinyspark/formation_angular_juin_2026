@@ -22,38 +22,36 @@ export class CatalogService {
     return this._httpClient.get<Product[]>(environment.catalogURL);
   }
 
-  public async run():Promise<void>{
-    const prixTTC = new Promise<number>(
-      (resolve, reject) => {
-        resolve(120);
-        // reject("Une erreur est survenue");
+
+  private getPriceHT():Promise<number>{
+    return new Promise<number>(
+      (resolve, reject)=>{
+        setTimeout( 
+          ()=>{
+            resolve(100);
+          }, 
+          1000
+        )
       }
     );
+  }
 
-    let price = -1;
-    try{
-      price = await prixTTC;
-    }
-    catch(error){
-      console.error(error);
-    }
-    finally{
-      console.log(price);
-    }
+  private getVAT():Promise<number>{
+    return new Promise<number>(
+      (resolve, reject)=>{
+        setTimeout( 
+          ()=>{
+            resolve(20);
+          }, 
+          1000
+        )
+      }
+    );
+  }
 
-    // prixTTC.then(
-    //   (value:number) => {
-    //     console.log(value);
-    //   }
-    // ).catch(
-    //   (error) => {
-    //     console.error(error);
-    //   }
-    // ).finally(
-    //   () => {
-    //     console.log("Le traitement est terminé");
-    //   }
-    // );
-
+  public async run():Promise<void>{
+    const vat = await this.getVAT();
+    const price = await this.getPriceHT() * (1+(vat/100));
+    console.log(price);
   }
 }
