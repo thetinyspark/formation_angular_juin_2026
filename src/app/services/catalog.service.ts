@@ -7,7 +7,6 @@ import { environment } from '../../environments/environment';
 import { EmployeeWithSalary } from '../model/types/EmployeeWithSalary.type';
 import { Salary } from '../model/types/Salary.type';
 import { Employee } from '../model/types/Employee.type';
-import { subscribe } from 'node:diagnostics_channel';
 
 @Injectable({
   providedIn: 'root'
@@ -74,45 +73,68 @@ export class CatalogService {
   }
 
   public async run():Promise<void>{
-    const prices1$ = interval(1000).pipe( map( counter => counter ));
-    const vat1$ = interval(2000).pipe(map( counter => Math.round(Math.random()*20)));
-    const vat = 20; 
+    
+    const employees$ = new Observable<Employee>( 
+      (sub:Subscriber<Employee>)=>{
+        const exec = async ()=>{
+          const employees = await this.getEmployees();          
+          const intervalId = setInterval( 
+            ()=>{
+              if( employees.length > 0 )
+                sub.next(employees.pop());
+              else{
+                clearInterval(intervalId);
+                sub.complete();
+              }
+            }, 
+            1000
+          )
+        };
 
-    // const realPrices$ = prices1$.pipe( map(
-    //   (price:number)=>{
-    //     return price * (1+(vat/100));
-    //   }
-    // ));
-
-    // realPrices$.subscribe(console.log);
-
-    // combineLatest n'attends pas que les flux soient complétés pour diffuser 
-    // les dernières données diffusées par les deux flux MAIS, il faut 
-    // que chacun des flux ait diffusé au moins UNE donnée avant que combineLatest
-    // ne diffuse quoique ce soit. 
-
-
-    // forkJoin attend que les flux des deux observables soient complétés
-    // avant de diffuser la dernière valeur de chacun des flux
-    // forkJoin(
-    //   {
-    //     price: prices1$, 
-    //     vat: vat1$
-    //   }
-    // ).subscribe( 
-    //   (data:{price:number, vat:number})=>{
-    //     console.log(data.price, data.vat);
-    //   }
-    // );
-    combineLatest(
-      {
-        vat: vat1$,
-        price: prices1$, 
-      }
-    ).subscribe( 
-      (data:{price:number, vat:number})=>{
-        console.log(data.price, data.vat);
+        exec();
       }
     );
+
+    const salaries$ = new Observable<Salary>( 
+      (sub:Subscriber<Salary>)=>{
+        const exec = async ()=>{
+          const salaries = await this.getSalaries();          
+          const intervalId = setInterval( 
+            ()=>{
+              if( salaries.length > 0 )
+                sub.next(salaries.pop());
+              else{
+                clearInterval(intervalId);
+                sub.complete();
+              }
+            }, 
+            1000
+          )
+        };
+
+        exec();
+      }
+    );
+
+    const result = combineLatest(
+      {
+        salary: salaries$, 
+        employee: employees$,
+      }
+    ).pipe( 
+
+      map(
+        (data:{employee:Employee, salary:Salary})=>{
+          return {
+            id: data.employee.id, 
+            name: data.employee.name, 
+            salary: data.salary.employeeId == data.employee.id ? data.salary.amount : -1
+          }
+        }
+      )
+    );
+
+
+    result.subscribe(console.log);
   }
 }
