@@ -74,7 +74,9 @@ export class CatalogService {
 
   public async run():Promise<void>{
     
-
+    // on va partir du principe que le flux de cet observable 
+    // ne sera jamais complété et qu'il va continuer de diffuser 
+    // de la data en permanence, cela fait de lui un HOT observable
     const obs1$ = new Observable<number>( 
       (sub:Subscriber<number>)=>{
         const intervalId = setInterval( 
@@ -85,37 +87,32 @@ export class CatalogService {
           1000
         ); 
 
-        setTimeout( 
-          ()=>{
-            clearInterval(intervalId);
-            sub.complete();
-          }, 
-          3500
-        );
+
+        return ()=>{
+          // cette fonction s'éxécute, lorsqu'on se désinscrit de
+          // l'observable
+          clearInterval(intervalId);
+        }
+
       }
+
     ); 
 
-    // le mot clé interval de rxjs permet de créer 
-    // un observable qui diffuse une donnée toutes les x 
-    // millisecondes
-    interval(1000).subscribe(console.log);
-
-    obs1$.subscribe(
-      {
-        // lorsqu'une donnée est diffusée au sein de l'observable
-        next: (value:number)=>{
-          console.log(value);
-        },
-        
-        // la deuxième fonctionn gère les erreurs 
-        error: (error)=>{
-          console.log(error);
-        }, 
-        // la troisième fonction gère la complétion/fermeture du flux
-        complete: ()=>{
-          console.log("le flux est complété/fermé");
-        }
+    const sub1 = obs1$.subscribe(
+      (value:number)=>{
+        console.log(value);
       }
+    );
+
+    // lorsqu'on se désinscrit la fonction customisée s'éxécute 
+    // et met fin à la boucle interne de diffusion de données 
+    // au sein de l'observable. ATTENTION ce dernier n'a pas 
+    // un flux complété et est donc encore considéré comme "hot"
+    setTimeout( 
+      ()=>{
+        sub1.unsubscribe();
+      }, 
+      3500
     );
   }
 
