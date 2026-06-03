@@ -1,1 +1,6 @@
-<p>login works!</p>
+@if( isConnected() ){
+    <button (click)="logout()">Logout</button>
+}
+@else{
+    <button (click)="login()">Login</button>
+}
