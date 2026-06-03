@@ -49,9 +49,13 @@ export class CatalogService {
     );
   }
 
+  private getPriceAndVat():Promise<[number, number]>{
+    return Promise.all( [ this.getPriceHT(), this.getVAT() ]);
+  }
+
   public async run():Promise<void>{
-    const vat = await this.getVAT();
-    const price = await this.getPriceHT() * (1+(vat/100));
+    const data = await this.getPriceAndVat();
+    const price = data[0] * (1+(data[1]/100));
     console.log(price);
   }
 }
