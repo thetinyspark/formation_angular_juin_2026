@@ -23,30 +23,28 @@ export class CatalogService {
   }
 
 
-  private getPriceHT():Promise<number>{
-    return new Promise<number>(
-      (resolve, reject)=>{
-        setTimeout( 
-          ()=>{
-            resolve(100);
-          }, 
-          1000
-        )
-      }
-    );
+  private async getPriceHT():Promise<number>{
+    try{
+      const response = await window.fetch("./assets/price.json"); 
+      const data = await response.json();
+      return data.value as number;
+    }
+    catch(error){
+      console.log(error);
+      return 0;
+    }
   }
 
-  private getVAT():Promise<number>{
-    return new Promise<number>(
-      (resolve, reject)=>{
-        setTimeout( 
-          ()=>{
-            resolve(20);
-          }, 
-          1000
-        )
-      }
-    );
+  private async getVAT():Promise<number>{
+    try{
+      const response = await window.fetch("./assets/tva.json"); 
+      const data = await response.json();
+      return data.value as number;
+    }
+    catch(error){
+      console.log(error);
+      return 0;
+    }
   }
 
   private getPriceAndVat():Promise<[number, number]>{
@@ -58,4 +56,13 @@ export class CatalogService {
     const price = data[0] * (1+(data[1]/100));
     console.log(price);
   }
+
+
+  // promise1 -> stack -> EventLoop JS 
+    // est-elle résolue ? 
+      // oui -> traitement de la data obtenue de façon synchrone et monothread
+      // non -> on passe à la prochaine promise à traiter
+
+  // promise2 -> stack -> EventLoop JS 
+  // NodeJS ou Browser accorde un petit temps d'éxécution à chaque promesse dans la EventLoop
 }
