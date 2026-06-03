@@ -1,8 +1,10 @@
-TP n°6 
+TP n°7 
 
-Ajoutez les fonctionnalités suivantes au CartService ainsi qu'au CartComponent. 
+- Créez une guard nommée IsConnectedGuard empêchant l'accès à la page du panier 
+si l'utilisateur n'est pas connecté. 
 
-- Si le panier est vide, affichez un message à la place du tableau vide (sinon c'est moche).
-- Ajoutez un bouton permettant de retirer un élément du panier. 
-- Ajoutez une méthode sur le CartService capable de retirer un produit du panier. 
-- Faire en sorte de calculer la total HT ainsi que le total TTC (TVA 20%) et l'afficher dans le composant
+- Créez un service LoginService avec une méthode "login" prenant en paramètre un pseudo
+et un mot de passe. Si le pseudo et le mot de passe sont égaux à "admin" et "admin", alors
+l'utilisateur est connecté. 
+
+- Créez un bouton de connexion au sein du LoginComponent (nous verrons les formulaires plus tard), cela sera suffisant. 
