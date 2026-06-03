@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { Product } from '../model/product';
 import { PRODUCTS } from '../model/mocks/product.mock';
 import { combineLatest, firstValueFrom, forkJoin, interval, map, Observable, of, ReplaySubject, Subject, Subscriber } from 'rxjs';
@@ -14,10 +14,31 @@ import { Employee } from '../model/types/Employee.type';
 export class CatalogService {
 
   private _httpClient: HttpClient = inject(HttpClient);
-  public intervalId:any = 0;
-  public sub3:ReplaySubject<EmployeeWithSalary> = this.getStreamingEmployeeWithSalary();
+  public s1 = signal<number>(0); 
+  public s2 = computed(
+    ()=>{
+      console.log("recompute");
+      return this.s1() * 2;
+    }
+  );
 
-  constructor() { }
+
+  constructor() { 
+    effect(
+      ()=>{
+        const value = this.s1();
+        const value2 = this.s2();
+        console.log(value, value2);
+      }
+    ); 
+  }
+
+  public async run():Promise<void>{
+    
+    this.s1.set(10); 
+    setTimeout( ()=>this.s1.set(100), 3000);
+
+  }
 
   public getProducts():Product[] {
     return PRODUCTS;
@@ -73,84 +94,6 @@ export class CatalogService {
     );
   }
 
-  private getStreamingEmployee():ReplaySubject<Employee>{
-    const sub$ = new ReplaySubject<Employee>();
-    this.getEmployees().then( 
-      (employees:Employee[])=>{
-        const inter = setInterval( 
-          ()=>{
-            if( employees.length > 0 )
-              sub$.next( employees.pop() as Employee )
-            else{
-              clearInterval(inter);
-              console.log("employees completed");
-              sub$.complete();
-            }
-          }, 
-          1000
-        )
-      }
-    )
-    return sub$;
-  }
 
-  private getStreamingSalary():ReplaySubject<Salary>{
-    const sub$ = new ReplaySubject<Salary>();
-    this.getSalaries().then( 
-      (salaries:Salary[])=>{
-        const inter = setInterval( 
-          ()=>{
-            if( salaries.length > 0 )
-              sub$.next( salaries.pop() as Salary )
-            else{
-              clearInterval(inter);
-              console.log("salaries completed");
-              sub$.complete();
-            }
-          }, 
-          2000
-        )
-      }
-    )
-    return sub$;
-  }
 
-  private getStreamingEmployeeWithSalary():ReplaySubject<EmployeeWithSalary>{
-    const sub$ = new ReplaySubject<EmployeeWithSalary>();
-    combineLatest({
-      employee: this.getStreamingEmployee(), 
-      salary: this.getStreamingSalary()
-    }).subscribe( 
-      (data: {employee:Employee, salary: Salary})=>{
-        sub$.next(
-          {
-            id: data.employee.id, 
-            name: data.employee.name, 
-            // salary: data.employee.id === data.salary.employeeId ? data.salary.amount : -1
-            salary: data.salary.amount
-          }
-        )
-      }
-    );
-    return sub$;
-  }
-
-  public async run():Promise<void>{
-    
-    this.sub3.subscribe( 
-      (value)=>{
-        console.log("channel 1: ", value);
-      }
-    )
-    setTimeout( 
-      ()=>{
-        this.sub3.subscribe(
-          (value)=>{
-            console.log("channel 2: ", value);
-          }
-        );
-      }, 
-      10000
-    )
-  }
 }
