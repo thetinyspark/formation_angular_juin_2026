@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Product } from '../model/product';
 import { PRODUCTS } from '../model/mocks/product.mock';
-import { firstValueFrom, Observable, of, Subscriber } from 'rxjs';
+import { combineLatest, firstValueFrom, interval, Observable, of, Subscriber } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { EmployeeWithSalary } from '../model/types/EmployeeWithSalary.type';
@@ -73,16 +73,32 @@ export class CatalogService {
   }
 
   public async run():Promise<void>{
+    
+
     const obs1$ = new Observable<number>( 
-      (subscriber:Subscriber<number>)=>{
-        subscriber.next(10);
-        subscriber.next(20);
-        subscriber.next(30);
-        subscriber.next(666);
-        subscriber.complete();
-        subscriber.next(1000);
+      (sub:Subscriber<number>)=>{
+        const intervalId = setInterval( 
+          ()=>{
+            console.log("interval loop");
+            sub.next( Math.round(Math.random()*1000));
+          },
+          1000
+        ); 
+
+        setTimeout( 
+          ()=>{
+            clearInterval(intervalId);
+            sub.complete();
+          }, 
+          3500
+        );
       }
-    );
+    ); 
+
+    // le mot clé interval de rxjs permet de créer 
+    // un observable qui diffuse une donnée toutes les x 
+    // millisecondes
+    interval(1000).subscribe(console.log);
 
     obs1$.subscribe(
       {
