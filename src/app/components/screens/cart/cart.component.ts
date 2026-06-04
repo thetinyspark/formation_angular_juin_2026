@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CartService } from '../../../services/cart.service';
 import { Product } from '../../../model/product';
 import { NgFor } from '@angular/common';
@@ -14,12 +14,20 @@ import { ProductComponent } from '../../products/product/product.component';
 export class CartComponent {
   private _cartService: CartService = inject(CartService);
   public products: Product[] = [];
+  public totalPriceHT = signal<number>(0);
+  public tva = signal<number>(0);
+  public totalPriceTTC = computed( 
+    ()=>{
+      return this.totalPriceHT() * (1+(this.tva()/100));
+    }
+  );
 
   public ngOnInit(): void {
       this._cartService.getCartFromAPI().subscribe(
         {
           next: (products) => {
             this.products = products;
+            this.totalPriceHT.set( this._cartService.getTotalPrice());
           },
           error: (err) => {
             console.error(err);
@@ -31,12 +39,12 @@ export class CartComponent {
     );
   }
 
-  public getTotalPrice(): number {
-    return this._cartService.getTotalPrice();
+  public upTVA():void{
+    this.tva.set( this.tva() + 5);
   }
 
-  public getTotalPriceTTC(): number {
-    return this._cartService.getTotalPriceTTC();
+  public downTVA():void{
+    this.tva.set( this.tva() - 5);
   }
 
   public removeFromCart(product: Product): void {

@@ -27,19 +27,17 @@ export class CatalogComponent {
 
   public ngOnInit(): void {
 
-    this._catalogService.run();
+    this._catalogService.getProductsFromAPI().subscribe( 
+      (products: Product[])=>{
+        this.products = products;
 
-    // this._catalogService.getProductsFromAPI().subscribe( 
-    //   (products: Product[])=>{
-    //     this.products = products;
+        this.platforms = products.map( 
+          (product: Product) => product.platform
+        ); 
 
-    //     this.platforms = products.map( 
-    //       (product: Product) => product.platform
-    //     ); 
-
-    //     this.platforms.unshift("All");
-    //   }
-    // );
+        this.platforms.unshift("All");
+      }
+    );
   }
 
   public getCatalogFilter(): CatalogFilter {

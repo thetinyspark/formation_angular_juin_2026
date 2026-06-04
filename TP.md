@@ -1,12 +1,7 @@
-TP n°12 
+TP n°13 
 
-Créez 2 subject/replaysubject, un qui diffuse toutes les secondes un employe, l'autre qui diffuse, un salaire toutes les 2 secondes. 
+- Déclarer sur le cartService un signal d'un tableau de produit comme propriété publique. 
+- Faire en sorte de brancher votre cartComponent sur ce signal et afficher 
+les produits dans le template à partir de ce signal. 
 
-Avec combineLatest, mixez les deux observables, afin de produire une sortie de type 
-EmployeeWithSalary en mixant les données de vos deux premiers observables. 
 
-
-Bonus: 
-
-Faites en sorte de pouvoir compléter vos flux pour les deux premiers observables, 
-ainsi vous pourrez observer la différence entre combineLatest et forkJoin. 

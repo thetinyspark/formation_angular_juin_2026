@@ -20,13 +20,24 @@
 
     <tr>
         <td colspan="2"></td>
+        <td>TVA: </td>
+        <td>
+            <p>
+                <span>{{ tva() }}%</span>
+                <button (click)="upTVA()">+</button>
+                <button (click)="downTVA()">-</button>
+            </p> 
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
         <td>Total HT: </td>
-        <td>{{ getTotalPrice().toFixed(2) }}€</td>
+        <td>{{ totalPriceHT() }}€</td>
     </tr>
     <tr>
         <td colspan="2"></td>
         <td>Total TTC: </td>
-        <td>{{ getTotalPriceTTC().toFixed(2) }}€</td>
+        <td>{{ totalPriceTTC() }}€</td>
     </tr>
 </table>
 }
