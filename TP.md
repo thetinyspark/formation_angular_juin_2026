@@ -1,6 +1,5 @@
-TP n°15 
+TP n°16 
 
-- En vous basant sur le test de isConnectedGuard, testez l'ensemble des cas 
-d'usages de cartNotEmptyGuard
+- À l'aide de tout ce que vous avez vu, testez les méthodes du CatalogService
 
 
