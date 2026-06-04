@@ -10,7 +10,7 @@ export class LoginService {
   public login(username: string, password: string): boolean {
     // Ici, on simule une authentification en vérifiant si le nom d'utilisateur et le mot de passe sont corrects.
     // Dans une application réelle, vous devriez faire une requête à un serveur pour vérifier les informations d'identification.
-    if (username === 'admin' && password === 'admin') {
+    if (username === 'admin@admin.com' && password === 'admin') {
       // Si les informations d'identification sont correctes, on peut stocker un token ou une information de session.
       localStorage.setItem('isConnected', 'true');
       return true;

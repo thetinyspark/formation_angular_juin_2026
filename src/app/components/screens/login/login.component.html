@@ -1,6 +1,22 @@
-@if( isConnected() ){
-    <button (click)="logout()">Logout</button>
+
+@if( !connected ){
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div>
+            <label>Email: </label>
+            <input type="email" formControlName="email" />
+        </div>
+        
+        <div>
+            <label>Password: </label>
+            <input type="password" formControlName="password" />
+            @if( form.get("password")?.errors?.['tooShortPassword']){
+                <p>Le mot de passe est trop court</p>   
+            }
+        </div>
+        
+        <button type="submit">Connexion</button>
+    </form>
 }
 @else{
-    <button (click)="login()">Login</button>
+    <button (click)="logout()">Déconnexion</button>
 }
