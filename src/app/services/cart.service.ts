@@ -1,5 +1,6 @@
 import { computed, effect, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Product } from '../model/product';
+import { delay, firstValueFrom } from 'rxjs';
 // import { Observable, of } from 'rxjs';
 // import { HttpClient } from '@angular/common/http';
 // import { environment } from '../../environments/environment';
@@ -55,7 +56,7 @@ export class CartService {
   }
 
 
-  private load():void{
+  public async load():Promise<void>{
     const jsonData:string = localStorage.getItem('cart') || '[]';
     this._cart = JSON.parse(jsonData) as Product[];
     this._cart$.set(this._cart);
