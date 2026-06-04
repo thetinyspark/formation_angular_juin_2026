@@ -23,7 +23,7 @@
 <div id="catalog" class="row">
     <app-product [product]="currentProduct" 
                 (onAddToCart)="onAddToCart($event)" 
-                class="col-4 psmall"
+                class="col-4 psmall product"
                 [buyable]="true" 
                 [detailed]="false" 
                 *ngFor="let currentProduct of products | catalogFilter: getCatalogFilter()"  />
