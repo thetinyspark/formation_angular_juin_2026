@@ -4,7 +4,6 @@ import { PRODUCTS } from '../model/mocks/product.mock';
 import { Observable, of, Subscriber } from 'rxjs';
 
 export const catalogInterceptor: HttpInterceptorFn = (req, next) => {
-
   // permet de simuler le comportement du serveur , on n'a plus besoin 
   // de tricher avec notre service en attendant que le back end soit dispo. 
   // bonus non négligeable, c'est utilisable pour bouchonner les tests

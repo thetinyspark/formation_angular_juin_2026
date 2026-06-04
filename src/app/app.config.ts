@@ -8,6 +8,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { environment } from '../environments/environment';
 import {NgModule} from '@angular/core';
 import { catalogInterceptor } from './interceptors/catalog.interceptor';
+import { cartInterceptor } from './interceptors/cart.interceptor';
 
 @NgModule({
   providers: [{provide: APP_BASE_HREF, useValue: environment.baseHref}]
@@ -27,6 +28,6 @@ export const appConfig: ApplicationConfig = {
 
 if( !environment.production){
   appConfig.providers.push(
-    provideHttpClient(withInterceptors([catalogInterceptor]))
+    provideHttpClient(withInterceptors([catalogInterceptor, cartInterceptor]))
   );
 }

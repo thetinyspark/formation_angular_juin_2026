@@ -1,6 +1,8 @@
 import { computed, effect, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Product } from '../model/product';
 import { delay, firstValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 // import { Observable, of } from 'rxjs';
 // import { HttpClient } from '@angular/common/http';
 // import { environment } from '../../environments/environment';
@@ -12,6 +14,7 @@ export class CartService {
 
   private _cart$ = signal<Product[]>([]);
   private _tva$ = signal<number>(0);
+  private _httpClient = inject(HttpClient);
 
   // tous les signaux au public sont en readOnly afin d'éviter 
   // de multiplier les sources de vérité. 
@@ -55,21 +58,18 @@ export class CartService {
     this._tva$.set(value);
   }
 
-
   public async load():Promise<void>{
-    const jsonData:string = localStorage.getItem('cart') || '[]';
-    this._cart = JSON.parse(jsonData) as Product[];
+    this._cart = await firstValueFrom(this._httpClient.get<Product[]>(environment.cartURL));
     this._cart$.set(this._cart);
   }
 
-  private save():void{
+  private async save():Promise<void>{
     this._cart$.set(this._cart);
-    localStorage.setItem('cart', JSON.stringify(this._cart));
+    const result = await firstValueFrom(this._httpClient.post<Product[]>(environment.cartURL, JSON.stringify(this._cart)));
   }
 
   public clear():void{
     this._cart = [];
-    this._cart$.set(this._cart);
-    localStorage.removeItem('cart');
+    this.save();
   }
 }
