@@ -1,4 +1,4 @@
-@if( products.length === 0){
+@if( products().length === 0){
     <p class="psmall">Votre panier est vide</p>
 } 
 @else {
@@ -9,7 +9,7 @@
         <th>Prix</th>
         <th>Image</th>
     </tr>
-    @for(product of products; track product.id){
+    @for(product of products(); track product.id){
         <tr>
             <td><button (click)="removeFromCart(product)">X</button></td>
             <td class="col-3 psmall">{{ product.name }}</td>

@@ -1,23 +1,40 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, effect, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Product } from '../model/product';
-import { Observable, of } from 'rxjs';
+// import { Observable, of } from 'rxjs';
 // import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+// import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
 
+  private _cart$ = signal<Product[]>([]);
+  private _tva$ = signal<number>(0);
+
+  // tous les signaux au public sont en readOnly afin d'éviter 
+  // de multiplier les sources de vérité. 
+  public totalPriceHT$ = computed( 
+    ()=>{
+        // le fonctionnement de reduce est le suivant :
+        // total : c'est la valeur accumulée jusqu'à présent, qui commence à 0 (le deuxième argument de reduce)
+        // product : c'est l'élément actuel du tableau sur lequel reduce est en train de travailler
+        return this._cart$().reduce((total, product) => total + product.price, 0);
+    }
+  );
+
+  public totalPriceTTC$ = computed( 
+    ()=>{
+      return this.totalPriceHT$() * (1+(this._tva$()/100));
+    }
+  );
+
+  public cart$ = this._cart$.asReadonly();
+  public tva$ = this._tva$.asReadonly();
   private _cart: Product[] = [];
-  // private _httpClient: HttpClient = inject(HttpClient);
+
   constructor() { 
     this.load();
-  }
-
-  public getCartFromAPI():Observable<Product[]>{
-    return of(this._cart);
-    // return this._httpClient.get<Product[]>(environment.cartURL);
   }
 
   public addToCart(product: Product): void {
@@ -33,30 +50,25 @@ export class CartService {
     }
   }
 
-  public getTotalPrice(): number {
-    // le fonctionnement de reduce est le suivant :
-    // total : c'est la valeur accumulée jusqu'à présent, qui commence à 0 (le deuxième argument de reduce)
-    // product : c'est l'élément actuel du tableau sur lequel reduce est en train de travailler
-    return this._cart.reduce((total, product) => total + product.price, 0);
+  public setTVA(value:number):void{
+    this._tva$.set(value);
   }
 
-  public getTotalPriceTTC(): number {
-    const totalHT = this.getTotalPrice();
-    const tva = 0.2; // taux de TVA de 20%
-    return totalHT * (1 + tva);
-  }
 
   private load():void{
     const jsonData:string = localStorage.getItem('cart') || '[]';
     this._cart = JSON.parse(jsonData) as Product[];
+    this._cart$.set(this._cart);
   }
 
   private save():void{
+    this._cart$.set(this._cart);
     localStorage.setItem('cart', JSON.stringify(this._cart));
   }
 
   private clear():void{
     this._cart = [];
+    this._cart$.set(this._cart);
     localStorage.removeItem('cart');
   }
 }
