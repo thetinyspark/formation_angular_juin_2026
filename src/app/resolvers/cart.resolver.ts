@@ -4,7 +4,7 @@ import { inject, Signal } from '@angular/core';
 import { Product } from '../model/product';
 import { PreloadingService } from '../services/preloading.service';
 
-export const cartResolver: ResolveFn<Signal<Product[]> > = (route, state) => {
+export const cartResolver: ResolveFn<Signal<Product[]>> = (route, state) => {
   const cartService:CartService = inject(CartService);
   const preloadingService:PreloadingService = inject(PreloadingService);
 
